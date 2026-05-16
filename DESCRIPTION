@@ -1,0 +1,27 @@
+Package: xegaMigration 
+Title: xega Island Models
+Version: 0.5.0.1
+Authors@R: 
+    person(given = "Andreas",
+           family = "Geyer-Schulz",
+           role = c("aut", "cre"),
+           email = "Andreas.Geyer-Schulz@kit.edu",
+           comment = c(ORCID = "0009-0000-5237-3579"))
+Description:
+    Implements asynchronous message-based communication protocols
+    for island models of extended and evolutionary algorithms 
+    (See Tomassini, Marco (2005, ISBN:978-3-540-24193-5)) for the 
+    R-package xega <https://CRAN.R-project.org/package=xega>.
+    For examples, see
+    <https://github.com/ageyerschulz/xega/tree/main/examples/IslandModels>.
+License: MIT + file LICENSE
+URL: https://github.com/ageyerschulz/xegaMigration
+Encoding: UTF-8
+LazyData: false
+RoxygenNote: 7.3.3
+Depends: R (>= 3.5.0)
+Imports:
+	xegaSelectGene (>= 1.0.0.4),
+        xegaPopulation
+Suggests: 
+        testthat (>= 3.0.0)
