@@ -99,6 +99,8 @@ xegaMigrate<-function(population, fit, lF)
 # cat("slowest Time(", lF$slowestTime(), ")\n")
 # cat("slowest Pid(", lF$slowestPid(), ")\n")
 LTP<-lF$LTP()
+# 1. Probe for termination signals of other islands 
+#    and return signal termination.
 DTP<-lF$ProbeTerm(lF)
 if (DTP)  
 { # cat("xegaMigrate DTP(:",DTP,")\n") 
@@ -108,6 +110,7 @@ if (DTP)
                              slowestTime=lF$slowestTime(),
                              slowestPid=lF$slowestPid())))
 }
+# 2. Signal termination to other islands.
 if (LTP)  
 {  # cat("xegaMigrate Broadcasting. LTP(",LTP,"\n") 
    lF$BroadcastTerm(lF)
@@ -118,6 +121,7 @@ if (LTP)
                              slowestPid=lF$slowestPid())))
 }
 pop<-population
+# 3. Select emigrants and send them to other islands.
 midx<-lF$SelMigrant(fit, lF, size=lF$Nmigrants())
 emigrants<-population[midx]
 slowestTime<-max(lF$avgTime(), lF$slowestTime())
@@ -130,6 +134,7 @@ msgSent<-list(list(genes=emigrants,
                    slowestTime=slowestTime, 
                    slowestPid=slowestPid))
 rc<-lF$Send(msgSent, lF)
+# 4. Receive immigrants from other islands and replace genes.
 msgReceived<-lF$Receive(lF)
 # cat("xegaMigration: msgReceived\n")
 # print(msgReceived)
@@ -162,6 +167,7 @@ if (length(msgReceived)>0)
    # cat("xegaMigrate: Emigrants(", length(emigrants), 
    #                 ") Immigrants(", length(immigrants), ")\n")
    }
+# 5. Update generation limit and slowest pid.
    if (lF$pid()==lF$slowestPid()) 
       {newGenerationLimit<-lF$Generations()}
       else 
