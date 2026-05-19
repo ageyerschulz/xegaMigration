@@ -7,8 +7,8 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "Andreas.Geyer-Schulz@kit.edu",
            comment = c(ORCID = "0009-0000-5237-3579")),
-    person(given = "Mostafa",
-           family = "Zamani-Shandiz",
+    person(given = "Seyedmostafa",
+           family = "Zamanishandiz",
            role = c("aut"),
            email = "mostafa-shandiz@partner.kit.edu",
            comment = c(ORCID = "0009-0000-3324-4739"))
