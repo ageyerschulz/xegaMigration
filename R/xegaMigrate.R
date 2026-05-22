@@ -38,6 +38,7 @@ NewLFxegaMigrate<-function()
   lF$slowestTime<-xegaSelectGene::parm(0.01)
   lF$slowestPid<-xegaSelectGene::parm(0)
   lF$Generations<-xegaSelectGene::parm(10)
+  lF$migrationStrategy<-xegaSelectGene::parm(TRUE)
   return(lF) }
 
 #' Migrate genes.
@@ -98,12 +99,14 @@ xegaMigrate<-function(population, fit, lF)
 # cat("average Time(", lF$avgTime(), ")\n")
 # cat("slowest Time(", lF$slowestTime(), ")\n")
 # cat("slowest Pid(", lF$slowestPid(), ")\n")
-LTP<-lF$LTP()
+#
 # 1. Probe for termination signals of other islands 
 #    and return signal termination.
-DTP<-lF$ProbeTerm(lF)
+if (lF$migrationStrategy()) 
+   {DTP<-lF$ProbeTerm(lF)} else {DTP<-lF$DTP()}
+                         
 if (DTP)  
-{ # cat("xegaMigrate DTP(:",DTP,")\n") 
+{ cat("xegaMigrate DTP(:",DTP,")\n") 
    return(list(pop=population, 
                rucksack=list(DTP=DTP, 
                              generationLimit=lF$Generations(),
@@ -111,8 +114,9 @@ if (DTP)
                              slowestPid=lF$slowestPid())))
 }
 # 2. Signal termination to other islands.
+LTP<-lF$LTP()
 if (LTP)  
-{  # cat("xegaMigrate Broadcasting. LTP(",LTP,"\n") 
+{  cat("xegaMigrate Broadcasting. LTP(",LTP,"\n") 
    lF$BroadcastTerm(lF)
    return(list(pop=population, 
                rucksack=list(DTP=DTP, 
@@ -124,7 +128,12 @@ pop<-population
 # 3. Select emigrants and send them to other islands.
 midx<-lF$SelMigrant(fit, lF, size=lF$Nmigrants())
 emigrants<-population[midx]
-slowestTime<-max(lF$avgTime(), lF$slowestTime())
+### Problem here for forecast!
+### slowestTime must also reduce on the slowest processor!
+if (lF$pid()==lF$slowestPid())
+   {slowestTime<-min(lF$avgTime(), lF$slowestTim())}   
+else
+   {slowestTime<-max(lF$avgTime(), lF$slowestTime())}
 if (lF$slowestTime()<lF$avgTime())
    {slowestPid<-lF$pid()} else
    {slowestPid<-lF$slowestPid()}
