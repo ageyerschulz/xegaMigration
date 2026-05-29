@@ -6,7 +6,7 @@
 #          Package: xegaMigration
 #
 
-#' Receive genes from neighbor processes.
+#' Receive genes from neighbor processes (non-blocking).
 #'
 #' @param lF      Local function configuration.
 #'
@@ -42,6 +42,20 @@ for (i in (1:length(fns)))
    genes<-c(genes, g)
    file.remove(fn)}
 return(genes) }
+
+#' Receive genes from neighbor processes (blocking).
+#'
+#' @param lF      Local function configuration.
+#'
+#' @return A gene list. 
+#' 
+#' @family rds communication
+#' 
+#'@export
+rdsReceiveGenesBlocking<-function(lF)
+{ invisible(rdsBarrier(lF))
+  return(rdsReceiveGenes(lF)) }
+
 
 #' Receive genes from neighbor processes (non-blocking).
 #'
@@ -80,20 +94,15 @@ return(genes)
 #'
 #' @export
 mpiReceiveGenesBlocking<-function(lF)
-{ genes<-list()
-invisible(lF$RmpiFNS$mpi.barrier())
-   while (lF$RmpiFNS$mpi.iprobe(source=lF$RmpiFNS$mpi.any.source(), tag=9, comm=1, status=0))
-   { g<-lF$RmpiFNS$mpi.recv.Robj(source=lF$RmpiFNS$mpi.any.source(), tag=9, comm=1, status=0)
-     genes<-c(genes, g) 
-   }
-return(genes)
-}
+{ invisible(lF$RmpiFNS$mpi.barrier())
+  return(mpiReceiveGenes(lF)) }
 
 #' Factory for configuring the message receiving
 #'
 #' Avalailable methods: 
 #' \enumerate{
-#'  \item "rds": Message receiving via rds-file I/O.
+#'  \item "rds": Message receiving via rds-file I/O. Non-blocking.
+#'  \item "rdsb": Message receiving via rds-file I/O. Blocking.
 #'  \item "mpi": Message receiving via mpi. Code with comments. Non-blocking.
 #'  \item "mpib": Message receiving via mpi. Code with comments. Blocking.
 #'  }
@@ -111,6 +120,7 @@ return(genes)
 xegaReceiveFactory<-function(method="rds")
 {
    if (method=="rds") {f<-rdsReceiveGenes}
+   if (method=="rdsb") {f<-rdsReceiveGenesBlocking}
    if (method=="mpi") {f<-mpiReceiveGenes}
    if (method=="mpib") {f<-mpiReceiveGenesBlocking}
 if (!exists("f", inherits=FALSE))

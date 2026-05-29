@@ -28,8 +28,8 @@
 #'@export
 rdsBroadcastTerm<-function(lF)
 {fn<-rdsTermFileName(lF$pid(), path=lF$path())
- genes<-"Terminate!"
- saveRDS(object=genes, file=fn)
+ msg<-"Terminate!"
+ saveRDS(object=msg, file=fn)
  invisible(0)}
 
 
