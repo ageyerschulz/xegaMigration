@@ -27,12 +27,20 @@ return(file.path(path, fn)) }
 
 #' Probes for termination message(s) (rds).
 #'
-#' @description Uses saveRDS for writing termination message to file.
-#' The file name is of the form TermFrom<spid>ToAllRND<pad>.rds
+#' @description Tests if a rds file with the 
+#'              filename TermFrom<spid>ToAllRND<pad>.rds
+#'              exists.
+#'              If such a file exists, returns \code{TRUE} for 
+#'              setting the \code{DTP} (the Distributed Termination Predicate).
+#'
+#' @details The termination message is sent by the function 
+#'          \code{rdsBroadcastTerm()} in the form of a rds file with the
+#'          filename TermFrom<spid>ToAllRND<pad>.rds.
 #'
 #' @param lF      Local function configuration.
 #'
-#' @return 0 (invisible) 
+#' @return Boolean. \code{TRUE} indicates that a termination message
+#'                  has been received and that the process should terminate.
 #' 
 #' @family rds communication
 #' 
@@ -65,15 +73,16 @@ return(TRUE)}
 #'
 #' @description Probes for termination messages (\code{tag=7}). 
 #'              If messages exist, returns \code{TRUE} for 
-#'              setting the \code{DTP} (the Distributed Termination Predicate) and
-#'              consumes all termination messages.
+#'              setting the \code{DTP} (the Distributed Termination Predicate) 
+#'              and consumes all termination messages.
 #'
 #' @details Expects \code{lF$RmpiFNS} elements bound to \code{Rmpi} functions
 #'          \code{mpi.iprobe()}, \code{mpi.any.source()}, and \code{mpi.recv.Robj()}.       
 #'
 #' @param lF      Local function configuration.
 #'
-#' @return Boolean     TRUE: Indicates termination.
+#' @return Boolean. \code{TRUE} indicates that a termination message
+#'                  has been received and that the process should terminate.
 #'
 #' @family mpi communication
 #'

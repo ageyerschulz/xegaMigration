@@ -9,11 +9,16 @@
 #' Broadcast termination message (rds).
 #'
 #' @description Uses saveRDS for writing termination message to file.
-#' The file name is of the form TermFrom<spid>ToAllRND<pad>.rds
+#' The file name is of the form TermFrom<spid>ToAllRND<pad>.rds.
+#'
+#' @details The termination message is "received" by the function 
+#'          \code{rdsProbeTerm()} by testing for the existence 
+#'          of a file with the name TermFrom<spid>ToAllRND<pad>.rds
+#'          in a file system shared by all island processes.
 #'
 #' @param lF      Local function configuration.
 #'
-#' @return 0 (invisible) 
+#' @return 0 (invisible). 
 #' 
 #' @family rds communication 
 #' 
@@ -32,20 +37,22 @@ rdsBroadcastTerm<-function(lF)
  saveRDS(object=msg, file=fn)
  invisible(0)}
 
-
 #' Broadcast termination message (mpi).
 #'
-#' @description Probes for termination messages (\code{tag=7}). 
-#'              If messages exist, returns \code{TRUE} for 
-#'              setting the \code{DTP} (the Distributed Termination Predicate) and
-#'              consumes all termination messages.
+#' @description Sends termination messages (\code{tag=7})
+#'              to all island processes.
 #'
 #' @details Expects \code{lF$RmpiFNS} elements bound to \code{Rmpi} functions
-#'          \code{mpi.iprobe()}, \code{mpi.any.source()}, and \code{mpi.recv.Robj()}.       
+#'          \code{mpi.iprobe()}, \code{mpi.any.source()}, 
+#'          and \code{mpi.recv.Robj()}.       
+#'
+#'          The termination messages are sent to all processes. 
+#'          The message that the broadcaster sends to himself 
+#'          is not received and remains in the mpi queue.
 #'
 #' @param lF      Local function configuration.
 #'
-#' @return Boolean     TRUE: Indicates termination.
+#' @return 0 (invisible).
 #'
 #' @family mpi communication 
 #'

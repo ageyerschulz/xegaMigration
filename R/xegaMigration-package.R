@@ -1,5 +1,5 @@
 
-#' The migration support for island models for \code{xega}
+#' The migration support for island models for the \code{xega}
 #' package.
 #'
 #' @section An Adaptive Completely Decentral Migration Strategy:
@@ -45,10 +45,43 @@
 #'
 #' aaa
 #'
-#' @section The Asynchronous Termination Protocol:
+#' @section The (Asynchronous) Termination Protocol:
 #'
-#' bbb
+#' The \strong{terminator} 
+#' (an island process who detects a local termination condition
+#' either by reaching an optimization goal or by resource exhaustion)
+#' broadcasts a termination message to the \strong{terminated} processes  
+#' (all other island processes 
+#' in the process ensemble) and terminates. All other island 
+#' processes receive the termination message and terminate.
 #'
+#' \itemize{ 
+#' \item \code{rds} communication. All island processes have access to 
+#'       a shared file system. The \strong{terminator} writes a termination 
+#'       file with the file name TermFrom<spid>ToAllRND<pad>.rds and 
+#'       terminates. 
+#'       Each \strong{terminated} process tests for the existence of this 
+#'       file and if the file exists, it terminates.   
+#'       The termination file remains in the shared directory and is 
+#'       not deleted.
+#' \item \code{mpi} communication.
+#'       All island processes are members of the mpi communication area 1 and
+#'       share a mpi message bus. The \strong{terminator} sends a 
+#'       termination message with tag 7 to the \strong{terminated} 
+#'       processes. 
+#'       Each \strong{terminated} process tests for the existence of 
+#'       a termination message with tag 7, and if such messages exist,
+#'       it consumes them and terminates.
+#'       The termination message which the \strong{terminator} has sent 
+#'       to itself is not consumed and remains on the mpi message bus.
+#' }
+#'
+#'  \tabular{ccc}{
+#'         \tab \strong{Terminator} \tab \strong{terminated} \cr
+#'  rds    \tab rdsBroadcastTerm()  \tab rdsProbeTerm()     \cr 
+#'  mpi    \tab mpiBroadcastTerm()  \tab mpiProbeTerm()     \cr 
+#'  }
+#' 
 #' @section rds Communication Primitives:
 #'
 #' ccc
