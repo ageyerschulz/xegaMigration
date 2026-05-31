@@ -65,10 +65,19 @@ invisible(0)
 ## mpi send
 
 
-#' Send genes to neighbor process.
+#' Send genes to neighbor process(es).
 #'
-#' @description Expects \code{Rmpi::mpi.send.Robj} bound to 
+#' @description A list of genes (the emigrants) 
+#'              is sent to each destination. 
+#'              The list of destinations is determined by 
+#'              the communication topology used. 
+#'              If there is more than one destination, 
+#'              the same list of emigrants is sent to each 
+#'              destination. 
+#'
+#' @details   Expects \code{Rmpi::mpi.send.Robj} bound to 
 #'              \code{lF$RmpiFNS$mpi.send.Robj}. 
+#'            The mpi message must be tagged with $9$.  
 #'
 #' @param genes   A gene list.
 #' @param lF      Local function configuration.

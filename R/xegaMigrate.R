@@ -48,7 +48,7 @@ NewLFxegaMigrate<-function()
 #'    \item Select emigrants.
 #'    \item Send emigrants to recipients defined by the communication topology.
 #'    \item Receive immigrants.
-#'    \item Replace some genes by immigrants.
+#'    \item Replace some genes in the population by immigrants.
 #'    } 
 #'     
 #' @details The classic non-blocking migration strategy is:
@@ -63,7 +63,7 @@ NewLFxegaMigrate<-function()
 #' @param fit          A fitness vector.
 #' @param lF           Local function configuration.
 #'
-#' @return m           A named list
+#' @return A named list with the following elements:
 #'         \enumerate{
 #'         \item $pop       A population.
 #'         \item $rucksack  Control information (named list) 
@@ -116,7 +116,7 @@ if (DTP)
 # 2. Signal termination to other islands.
 LTP<-lF$LTP()
 if (LTP)  
-{  cat("xegaMigrate Broadcasting. LTP(",LTP,"\n") 
+{  # cat("xegaMigrate Broadcasting. LTP(",LTP,"\n") 
    lF$BroadcastTerm(lF)
    return(list(pop=population, 
                rucksack=list(DTP=DTP, 

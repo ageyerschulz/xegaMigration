@@ -29,6 +29,21 @@ return(file.path(path, fn)) }
 
 #' Stop until all processes have reached the barrier.
 #'
+#' @description The island process reaching the barrier stops until 
+#'              all other island processes also reach the barrier. 
+#'              Then all island processes continue. 
+#'              \code{rdsBarrier()} implements a group lock mechanism 
+#'              based on file I/O operations with the same 
+#'              synchronization behavior as \code{Rmpi::mpiBarrier()}. 
+#'                 
+#' @details Each island process writes its barrier file and tests 
+#'          if the number of barrier files in the directory matches
+#'          the number of island processes. 
+#'          The island process which detects that all island processes
+#'          have arrived at the barrier, removes all barrier files 
+#'          (and thus releases all other island processes) before
+#'          it continues.
+#' 
 #' @param lF    Local function configuration.
 #'
 #' @return 0    (invisible)

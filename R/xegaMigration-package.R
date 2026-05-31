@@ -42,8 +42,35 @@
 #' @section An Adaptive Completely Decentral Migration Strategy:
 #'
 #' @section The Asynchronous Message Exchange Protocol:
+#' 
+#' Each island process performs the essentially the following 
+#' two communication steps:
+#' \enumerate{
+#'   \item It \strong{sends} a list with genes, the slowest time, and the 
+#'         pid of the slowest process to a list of receiving processes.
+#'   \item It \strong{receives} none, one, or several list(s) 
+#'         with genes, the slowest time, and 
+#'         the pid of the slowest process.      
+#'         }
 #'
-#' aaa
+#'  \tabular{ccc}{
+#'         \tab \strong{Send} \tab \strong{Receive}   \cr
+#'  rds    \tab rdsSend()     \tab rdsReceiveGenes() \cr 
+#'  mpi    \tab mpiSend() \tab mpiReceiveGenes() \cr 
+#'  }
+#'
+#' @section Synchronization of Island Processes:
+#'
+#' Synchronization of island processes is achieved by implementing 
+#' a message receive function which invokes a barrier function 
+#' which blocks until all island processes reach the barrier
+#' before the message receive function is called.
+#'
+#'  \tabular{ccc}{
+#'         \tab \strong{Barrier} \tab \strong{Receive}   \cr
+#'  rds    \tab rdsBarrier()     \tab rdsReceiveGenesBlocking() \cr 
+#'  mpi    \tab Rmpi::mpiBarrier() \tab mpiReceiveGenesBlocking() \cr 
+#'  }
 #'
 #' @section The (Asynchronous) Termination Protocol:
 #'
