@@ -56,7 +56,6 @@ rdsReceiveGenesBlocking<-function(lF)
 { invisible(rdsBarrier(lF))
   return(rdsReceiveGenes(lF)) }
 
-
 #' Receive genes from neighbor processes (non-blocking).
 #'
 #' @description Multiple mpi messages are received, if they exist
@@ -77,6 +76,25 @@ while (lF$RmpiFNS$mpi.iprobe(source=lF$RmpiFNS$mpi.any.source(), tag=9, comm=1, 
 { g<-lF$RmpiFNS$mpi.recv.Robj(source=lF$RmpiFNS$mpi.any.source(), tag=9, comm=1, status=0)
 genes<-c(genes, g) }
 return(genes)
+}
+
+#' Receive a result (non-blocking).
+#'
+#' @description A result object (\code{tag=8}) is received, if one exists.
+#'                
+#'
+#' @param lF      Local function configuration.
+#'
+#' @return  A result object or an empty list.
+#'
+#' @family mpi communication
+#'
+#' @export
+mpiReceiveResult<-function(lF)
+{ result<-list()
+if (lF$RmpiFNS$mpi.iprobe(source=lF$RmpiFNS$mpi.any.source(), tag=8, comm=1, status=0))
+{ result[[1]]<-lF$RmpiFNS$mpi.recv.Robj(source=lF$RmpiFNS$mpi.any.source(), tag=8, comm=1, status=0)}
+return(result)
 }
 
 #' Receive genes from neighbor processes (blocking).

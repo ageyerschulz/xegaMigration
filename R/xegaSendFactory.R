@@ -96,12 +96,37 @@ for (i in (1:length(dest)))
 invisible(0)
 }
 
+#' Send a a xega result to pid \code{0} with tag \code{8}.
+#'
+#' @description Sends the result object of the island 
+#'              algorithm to the master process.
+#'
+#' @details   Expects \code{Rmpi::mpi.send.Robj} bound to 
+#'              \code{lF$RmpiFNS$mpi.send.Robj}. 
+#'            The mpi message must be tagged with $8$.  
+#'
+#' @param result  The result of the island algorithm.
+#' @param lF      Local function configuration.
+#'
+#' @return 0 (invisible) 
+#'
+#' @family mpi communication
+#'
+#' @export
+mpiSendResults<-function(result, lF)
+{
+# tag=8, 8 integer for results. dest=0: default master process.
+lF$RmpiFNS$mpi.send.Robj(obj=result, dest=0, tag=8, comm=1) 
+invisible(0)
+}
+
 #' Factory for configuring the message sending
 #'
 #' Avalailable methods: 
 #' \enumerate{
-#'  \item "rds": Message sending via rds-file I/O.
-#'  \item "mpi": Message senging via mpi. Code with comments.
+#'  \item "rds": Message sending genes via rds-file I/O.
+#'  \item "mpi": Message sending genes via mpi. Code with comments.
+#  \item "mpiResult": Message sending results via mpi. Code with comments.
 #'  }
 #'
 #' @param method    Method. Default: "rds".
@@ -118,6 +143,7 @@ xegaSendFactory<-function(method="rds")
 {
    if (method=="rds") {f<-rdsSendGenes}
    if (method=="mpi") {f<-mpiSendGenes}
+#   if (method=="mpiResult") {f<-mpiSendResult}
 if (!exists("f", inherits=FALSE))
         {stop("xegaSend Factory label ", method, " does not exist")}
 return(f)

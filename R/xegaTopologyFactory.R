@@ -31,7 +31,91 @@ ringTop<-function(lF)
 { dest<-(lF$pid()+1) %% lF$npid()
   return(dest)}
 
-#' Select a random neighbor from all neighbors. 
+#' Select neighbors in bidirectional ring topology.
+#'
+#' @param  lF  Local function condiguration. 
+#'             Required element are 
+#'             \itemize{ 
+#'             \item \code{lF$npid()}:   Total number of processes.
+#'             \item \code{lF$pid()}:    Process number of message sender.
+#'             }
+#' 
+#' @return Process numbers of message receivers. 
+#' 
+#' @family Communication Topology
+#' 
+#' @examples
+#' lF<-list()
+#' lF$npid<-function() {10}
+#' lF$pid<-function()  {3}
+#' ring2Top(lF)
+#' lF$pid<-function()  {9}
+#' ring2Top(lF)
+#'
+#' @export
+ring2Top<-function(lF)
+{ dest1<-(lF$pid()+1) %% lF$npid()
+  dest2<-(lF$pid()-1) %% lF$npid()
+  return(c(dest1, dest2))}
+
+#' Select neighbors in 2D-torus.
+#'
+#' @description Processors are arranged in a X times Y grid. 
+#'              This implies that \code{lF$npid()==lF$torusX()*lF$torusY()}.
+#'
+#' @details The algorithm works in the following way:
+#'          \enumerate{
+#'          \item \code{lF$pif()} is converted into the grid coordinates 
+#'                (x, y) by the local function \code{n2xy()}.
+#'          \item The four neighbours in a distance of 1 are determined.
+#'          \item The coordinates are converted back to processor identifiers
+#'                by the local function \code{xy2n()}.
+#'          \item The list of identifiers of the neighbor processes is returned.
+#'          }
+#'
+#' @param  lF  Local function condiguration. 
+#'             Required element are 
+#'             \itemize{ 
+#'             \item \code{lF$torusX()}: Number of elements in X axes.
+#'             \item \code{lF$torusY()}: Number of elements in Y axes.
+#'             \item \code{lF$pid()}:    Process number of message sender.
+#'             }
+#' 
+#' @return Process numbers of message receivers. 
+#' 
+#' @family Communication Topology
+#' 
+#' @examples
+#' lF<-list()
+#' lF$pid<-function() {5}
+#' lF$torusX<-function() {3}
+#' lF$torusY<-function() {2}
+#' torus2DTop(lF)
+#'
+#' @export
+torus2DTop<-function(lF)
+{
+n2xy<-function(lF)
+{ y1<-floor(lF$pid()/lF$torusX())
+  x1<-lF$pid()-(lF$torusX()*(y1))
+  return(c((x1+1), (y1+1))) }
+
+xy2n<-function(x, y, lF)
+{ x1<-x; y1<-y
+  if (x1==0) {x1<-lF$torusX()}
+  if (y1==0) {y1<-lF$torusY()}
+  return((x1-1)+(y1-1)*lF$torusX()) }
+
+pos<-n2xy(lF)
+p1<-xy2n(((pos[1]+1) %% lF$torusX()), pos[2], lF)
+p2<-xy2n(((pos[1]-1) %% lF$torusX()), pos[2], lF)
+p3<-xy2n(pos[1], ((pos[2]+1) %% lF$torusY()), lF)
+p4<-xy2n(pos[1], ((pos[2]-1) %% lF$torusY()), lF)
+
+return(c(p1, p2, p3, p4))
+}
+
+#' Select one or more random neighbors from all neighbors. 
 #'
 #' @param  lF  Local function condiguration. 
 #'             Required element are 
@@ -179,6 +263,12 @@ gPetersenTop<-function(lF)
 #'  \item "random": Returns a function which selects (a) random message receiver(s).
 #'  \item "ring": Returns a function which selects the ring neighbour mod(i+1, n)  of node i 
 #'                  as message receiver.
+#'  \item "ring2": Returns a function which selects the ring neighbours 
+#'                 mod(i+1, n) and
+#'                 mod(i-1, n)  of node i 
+#'                  as message receiver.
+#'  \item "torus2D": Returns a function which selects the neighbours 
+#'                   on a 2D-torus.
 #'  \item "gPetersen": Returns a function which selects the neigbors of the process in a 
 #'                     generalized Petersen Graph PG(n, k). The number of processes must be
 #'                     \code{2n}, and \code{1<k<n}. 
@@ -198,6 +288,8 @@ xegaCommunicationTopologyFactory<-function(method="random")
 {
    if (method=="random") {f<-rndTop}
    if (method=="ring") {f<-ringTop}
+   if (method=="ring2") {f<-ring2Top}
+   if (method=="torus2D") {f<-torus2DTop}
    if (method=="gPetersen") {f<-gPetersenTop}
 if (!exists("f", inherits=FALSE))
         {stop("xegaCommunicationTopology Factory label ", method, " does not exist")}

@@ -106,7 +106,7 @@ if (lF$migrationStrategy())
    {DTP<-lF$ProbeTerm(lF)} else {DTP<-lF$DTP()}
                          
 if (DTP)  
-{ cat("xegaMigrate DTP(:",DTP,")\n") 
+{ # cat("xegaMigrate DTP(:",DTP,")\n") 
    return(list(pop=population, 
                rucksack=list(DTP=DTP, 
                              generationLimit=lF$Generations(),

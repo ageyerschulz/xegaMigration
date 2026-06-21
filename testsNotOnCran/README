@@ -1,0 +1,80 @@
+
+TODO: We need filelocks for collection, or we do spin until all files 
+      are present in process 0.
+
+Testing the Island Models of the R-Package xegaMigration.
+
+Testing the island models of the R-package xegaMigration 
+requires a fully functional distributed system, because of 
+the properties of the distributed algorithms used. 
+xegaMigration uses either the communication primitives 
+of mpi or semantically equivalent communication primitives
+using a common file system (the rds-file I/O of base R). 
+
+Test Cases.
+
+I. Test homogeneous island models without result collection phase.
+
+test-1-run.R: mpi communication.   
+     Should produce four xegaResult files in directory "./test1".   
+
+test-1-test.R: 
+     Tests: 
+     - Do we have four files?
+     - Did all the island algorithms improve the fitness? (4 times)
+     - Did all the islands have the same number of generations?
+
+test-2-run.R: rds communication.   
+     Should produce four xegaResult files in directory "./test1".   
+
+test-2-test.R: 
+     Tests: 
+     - Do we have four files?
+     - Did all the island algorithms improve the fitness? (4 times)
+     - Did all the islands have the same number of generations?
+      
+II. Test heterogenous island models with result collection phase.
+
+We need heterogenous island models with controlled run-time differences
+so that we know the order in which the processes finish.
+Process 0 is the process collecting the results, 
+the other processes send their results as soon as they finish.
+
+We need to test the following orders:
+[a] 0<1<2<3
+[b] 1<2<3<0
+[c] 2<1<0<3
+
+test-3-run.R: mpi
+
+test-4-run.R: mpi
+
+test-5.run.R: rds communication.
+        Process 0 probes 60 seconds for the results of the other 
+        processes (maxDelay=60).
+ 
+test-5-test.R: 
+     Tests: 
+     - Do we have 1 xegaIResult file?
+     - Does the xegaIResult file has three elements?
+     - Return code 0? (We have four results in the $results element)
+       Expected!
+     - 4 elements in $results?
+     - Did all the island algorithms improve the fitness? (4 times)
+     - Did all the islands have the same number of generations?
+      
+test-6.run.R: rds communication.
+        Process 0 probes 0 seconds for the results of the other 
+        processes (maxDelay=0).
+ 
+test-6-test.R: 
+     Tests: 
+     - Do we have 1 xegaIResult file? Expectation: Yes!
+     - Does the xegaIResult file has three elements?
+     - Return code -1? (We have less than four results in the $results element)
+       Expected!
+     - Less than 4 elements in $results?
+     - Did all the island algorithms improve the fitness? (x times)
+     - Did all the islands have the same number of generations?
+
+
