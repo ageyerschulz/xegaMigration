@@ -21,4 +21,3 @@ demeResult<-xegaReRun(Config[[1+pid]],
                       collect=TRUE,
                       Configuration=FALSE,
                       path="./test8B")
-~                                               

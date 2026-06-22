@@ -4,6 +4,7 @@ NUMBER_OF_TERMINALS=4
 
 R_CMD="R --no-save --quiet"
 R_PROFILE_USER=$1
+shift
 
 #TERMINAL_CMD="xterm"
 #TERMINAL_EXEC_OPTION="-e"
