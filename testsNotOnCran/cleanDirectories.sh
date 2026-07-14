@@ -11,4 +11,9 @@ rm -rf ./test7C/
 rm -rf ./test8A/
 rm -rf ./test8B/
 rm -rf ./test8C/
+rm -rf ./test9/
+rm -rf ./test9A/
+rm -rf ./test10/
+rm -rf ./test11/
+rm -rf ./test12/
 

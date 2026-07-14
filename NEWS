@@ -10,3 +10,7 @@ Version 0.5.0.2 (2026-05-28)
 
 - Blocking rdsReceive added.
 
+Version 0.5.0.3 (2026-07-14)
+
+- Bug fixes.
+- System integration tests in ./testsNotOnCran/

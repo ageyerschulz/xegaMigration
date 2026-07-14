@@ -18,6 +18,7 @@ Config<-readRDS(file="TSPlin105orderAConfig.rds")
 
 demeResult<-xegaReRun(Config[[1+pid]], 
                       verbose=0,
+                      CommunicationTopology="ring2",
                       pid=pid,
                       npid=npid,
                       migrateEvery=1,

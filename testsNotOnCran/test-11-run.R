@@ -6,26 +6,23 @@ npid=as.integer(args[2])
 
 suppressPackageStartupMessages(library(xega))
 
-#paths<-list("./test7A", "./test7B", "./test7C")
-#configs<-list("TSPlin105orderAConfig.rds",
-#              "TSPlin105orderBConfig.rds",
-#              "TSPlin105orderCConfig.rds")
-
 ### Does not work! 
-cat("Time order tests:", "TSPlin105orderBConfig.rds", "\n")
-Config<-readRDS(file="TSPlin105orderBConfig.rds") 
+Config<-readRDS(file="TSPlin105HomConfig.rds") 
 
-demeResult<-xegaReRun(Config[[1+pid]], 
-                      verbose=0,
+demeResult<-xegaReRun(Config, 
+                      popsize=1000,
+                      generations=200,
+                      verbose=2,
                       pid=pid,
                       npid=npid,
+                      nrecv=1,
                       CommunicationTopology="random",
                       migrateEvery=1,
                       maxDelay=60,
                       Send="rds",
-                      Receive="rds",
+                      Receive="rdsb",
                       collectResult="rds", 
                       collect=TRUE,
                       Configuration=FALSE,
-                      path="./test7B") 
+                      path="./test11") 
 

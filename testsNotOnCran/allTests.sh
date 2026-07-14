@@ -106,3 +106,39 @@ Rscript test-8C-test.R
 echo "[test-8C-test.R: finished]"
 echo "[test-8x-test.R: finished]"
 
+echo "[test-9-run.R: ... gPetersen(5,2), rds and collect results.]"
+rm -rf ./test9/
+mkdir ./test9
+./rdsRun10.sh test-9-run.R
+echo "[test-9-run.R: finished]"
+# echo "[test-9-test.R: Analyze results of test-9-run.R]"
+# Rscript test-6-test.R
+#echo "[test-9-test.R: finished]"
+
+echo "[test-9A-run.R: ... gPetersen(4,2), mpi and collect results.]"
+rm -rf ./test9A/
+mkdir ./test9A
+./mpiRun8.sh test-9A-run.R
+echo "[test-9A-run.R: finished]"
+
+# echo "[test-9-test.R: Analyze results of test-9-run.R]"
+# Rscript test-6-test.R
+#echo "[test-9-test.R: finished]"
+echo "[test-10-run.R: ... gPetersen(5,2), rdsb and collect results.]"
+rm -rf ./test10/
+mkdir ./test10
+./rdsRun10.sh test-10-run.R
+echo "[test-10-run.R: finished]"
+
+echo "[test-11-run.R: ... random 25, rdsb and collect results.]"
+rm -rf ./test11/
+mkdir ./test11
+./rdsRun25.sh test-11-run.R
+echo "[test-11-run.R: finished]"
+
+echo "[test-12-run.R: ... random 25, rdsb and collect results.]"
+rm -rf ./test12/
+mkdir ./test12
+./rdsRun25.sh test-12-run.R
+echo "[test-12-run.R: finished]"
+

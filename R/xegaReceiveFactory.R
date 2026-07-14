@@ -38,9 +38,15 @@ fns<-fns[grepl(pat2, fns)]
 if (length(fns)==0) {return(genes)}
 for (i in (1:length(fns)))
 {  fn<-file.path(lF$path(), fns[i])
-   g<-readRDS(fn)
+   readError<-FALSE
+   tryCatch(
+     {g<-readRDS(fn)},
+     error=function(e) {readError<<-TRUE}
+      )
+   if (readError) {next}
    genes<-c(genes, g)
-   file.remove(fn)}
+   file.remove(fn)
+}
 return(genes) }
 
 #' Receive genes from neighbor processes (blocking).

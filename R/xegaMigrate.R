@@ -2,7 +2,7 @@
 #
 # (c) 2026 Andreas Geyer-Schulz
 #          Migration: The migration algorithm.
-#          Package: xega
+#          Package: xegaMigration
 #
 
 #' Generate a local function list to test migration.
@@ -131,7 +131,7 @@ emigrants<-population[midx]
 ### Problem here for forecast!
 ### slowestTime must also reduce on the slowest processor!
 if (lF$pid()==lF$slowestPid())
-   {slowestTime<-min(lF$avgTime(), lF$slowestTim())}   
+   {slowestTime<-min(lF$avgTime(), lF$slowestTime())}   
 else
    {slowestTime<-max(lF$avgTime(), lF$slowestTime())}
 if (lF$slowestTime()<lF$avgTime())
@@ -140,23 +140,31 @@ if (lF$slowestTime()<lF$avgTime())
 # cat("xegaMigration: send slowestTime(", slowestTime, ")\n")
 # cat("xegaMigration: send slowestPid(", slowestPid, ")\n")
 msgSent<-list(list(genes=emigrants, 
+                   fromPid=lF$pid(),
+                   timems=as.numeric(Sys.time()),
                    slowestTime=slowestTime, 
                    slowestPid=slowestPid))
 rc<-lF$Send(msgSent, lF)
 # 4. Receive immigrants from other islands and replace genes.
-msgReceived<-lF$Receive(lF)
+msgReceived<-list()
+msgReceived$data<-lF$Receive(lF)
+# msgReceived$timems<-as.numeric(Sys.time())
 # cat("xegaMigration: msgReceived\n")
 # print(msgReceived)
-if (length(msgReceived)>0)
+if (length(msgReceived$data)>0)
     { #  cat("xegaMigration: Message Received\n")
       immigrants<-list()
+      fromPid<-list()
       slowestTime<-vector()
       slowestPid<-vector()
-      for (i in (1:length(msgReceived)))
-      { immigrants<-c(immigrants, msgReceived[[i]]$genes)
-        slowestTime<-c(slowestTime, msgReceived[[i]]$slowestTime)
-        slowestPid<-c(slowestPid, msgReceived[[i]]$slowestPid)
+      for (i in (1:length(msgReceived$data)))
+      { immigrants<-c(immigrants, msgReceived$data[[i]]$genes)
+        fromPid<-c(fromPid, msgReceived$data[[i]]$fromPid)
+        slowestTime<-c(slowestTime, msgReceived$data[[i]]$slowestTime)
+        slowestPid<-c(slowestPid, msgReceived$data[[i]]$slowestPid)
         }
+     # cat("xegaMigrate: received from pid: \n")
+     # print(fromPid)
    if (length(slowestTime)>1) 
           {a<-slowestTime
            slowestTime<-max(a)
@@ -182,11 +190,14 @@ if (length(msgReceived)>0)
       else 
       {newGenerationLimit<-lF$adaptGenerationLimit(lF)}
    slowestTime<-lF$slowestTime()
-   # cat("xegaMigration: newGenerationLimit:", newGenerationLimit, "\n")
+# cat("xegaMigration: newGenerationLimit:", newGenerationLimit, "\n")
+# 6. Report/Debug
+if (lF$migrationDebug()==TRUE)
+   { xegaShowMigrationReport(xegaMigrationReport(msgSent, msgReceived, lF))}
+# 7. Return.
    return(list(pop=pop, 
                rucksack=list(DTP=DTP, 
                generationLimit=newGenerationLimit,
                slowestTime=slowestTime, 
                slowestPid=slowestPid)))
 }
-

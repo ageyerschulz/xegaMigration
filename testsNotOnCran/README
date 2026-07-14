@@ -77,4 +77,19 @@ test-6-test.R:
      - Did all the island algorithms improve the fitness? (x times)
      - Did all the islands have the same number of generations?
 
+test-7A-run.R: rds communication.
+     - order [a] 0<1<2<3
+     - collect=TRUE
+     - CommunicationTopology="ring2"
+    
+test-7B-run.R: rds communication. 
+    - order [b] 1<2<3<0
+    - collect=TRUE
+    - CommunicationTopology="random", nrecv=1
+
+test-7C-run.R: rds communication.
+    - order [c] 2<1<0<3
+    - collect=TRUE
+    - CommunicationTopology="random", nrecv=2
+   
 

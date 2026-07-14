@@ -56,7 +56,7 @@ return(file.path(path, fn)) }
 rdsSendGenes<-function(genes, lF)
 { dest<-lF$CommunicationTopology(lF)
 for (i in (1:length(dest)))
-{ fn<-rdsFileName(lF$pid(), dest[1], path=lF$path())
+{ fn<-rdsFileName(lF$pid(), dest[i], path=lF$path())
   saveRDS(object=genes, file=fn) }
 invisible(0)
 }
