@@ -32,6 +32,9 @@ xegaMigrationReport<-function(msgSent=list(), msgReceived=list(), lF)
 {
 result<-list()
 iteration<-lF$cGeneration()
+pid<-lF$pid()
+if (!(length(msgSent)==0))
+{
 # 1. Emigrants.
 emigrants<-msgSent[[1]]$genes
 pid<-msgSent[[1]]$fromPid
@@ -53,6 +56,7 @@ rec$fit<-g$fit
 rec$gene<-g$gene1
 result[[1+length(result)]]<-rec
 }}
+}
 # 2. Immigrants.
 if (length(msgReceived$data)>0)
 {
@@ -94,6 +98,7 @@ return(result)
 #'@export
 xegaShowMigrationReport<-function(report)
 {
+if (length(report)==0) {return(invisible(0))}
 for (i in (1:length(report)))
 {
 r<-report[[i]]

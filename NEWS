@@ -14,3 +14,9 @@ Version 0.5.0.3 (2026-07-14)
 
 - Bug fixes.
 - System integration tests in ./testsNotOnCran/
+
+Version 0.5.0.4 (2026-07-16)
+
+- Function torus3DTop added.
+- xegaCommunicationTopology: torus3DTop added.
+

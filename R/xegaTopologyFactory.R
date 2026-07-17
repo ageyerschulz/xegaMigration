@@ -58,14 +58,14 @@ ring2Top<-function(lF)
   dest2<-(lF$pid()-1) %% lF$npid()
   return(c(dest1, dest2))}
 
-#' Select neighbors in 2D-torus.
+#' Select neighbors on a 2D-torus.
 #'
 #' @description Processors are arranged in a X times Y grid. 
 #'              This implies that \code{lF$npid()==lF$torusX()*lF$torusY()}.
 #'
 #' @details The algorithm works in the following way:
 #'          \enumerate{
-#'          \item \code{lF$pif()} is converted into the grid coordinates 
+#'          \item \code{lF$pid()} is converted into the grid coordinates 
 #'                (x, y) by the local function \code{n2xy()}.
 #'          \item The four neighbours in a distance of 1 are determined.
 #'          \item The coordinates are converted back to processor identifiers
@@ -113,6 +113,70 @@ p3<-xy2n(pos[1], ((pos[2]+1) %% lF$torusY()), lF)
 p4<-xy2n(pos[1], ((pos[2]-1) %% lF$torusY()), lF)
 
 return(c(p1, p2, p3, p4))
+}
+
+#' Select neighbors on a 3D-torus.
+#'
+#' @description Processors are arranged in a X times Y times Z grid. 
+#'              This implies that \code{lF$npid()==lF$torusX()*lF$torusY()*lF$torusZ()}.
+#'
+#' @details The algorithm works in the following way:
+#'          \enumerate{
+#'          \item \code{lF$pid()} is converted into the grid coordinates 
+#'                (x, y, z) by the local function \code{n2xyz()}.
+#'          \item The six neighbours in a distance of 1 are determined.
+#'          \item The coordinates are converted back to processor identifiers
+#'                by the local function \code{xyz2n()}.
+#'          \item The list of identifiers of the neighbor processes is returned.
+#'          }
+#'
+#' @param  lF  Local function condiguration. 
+#'             Required element are 
+#'             \itemize{ 
+#'             \item \code{lF$torusX()}: Number of elements in X axes.
+#'             \item \code{lF$torusY()}: Number of elements in Y axes.
+#'             \item \code{lF$torusZ()}: Number of elements in Z axes.
+#'             \item \code{lF$pid()}:    Process number of message sender.
+#'             }
+#' 
+#' @return Process numbers of message receivers. 
+#' 
+#' @family Communication Topology
+#' 
+#' @examples
+#' lF<-list()
+#' lF$pid<-function() {5}
+#' lF$torusX<-function() {3}
+#' lF$torusY<-function() {3}
+#' lF$torusZ<-function() {3}
+#' torus3DTop(lF)
+#'
+#' @export
+torus3DTop<-function(lF)
+{
+n2xyz<-function(lF)
+{ z1<-floor(lF$pid()/(lF$torusX()*lF$torusY()))
+  p<-lF$pid()-z1*lF$torusX()*lF$torusY()
+  y1<-floor(p/lF$torusX())
+  x1<-p-(lF$torusX()*(y1))
+  return(c((x1+1), (y1+1), (z1+1))) }
+
+xyz2n<-function(x, y, z, lF)
+{ x1<-x; y1<-y; z1<-z
+  if (x1==0) {x1<-lF$torusX()}
+  if (y1==0) {y1<-lF$torusY()}
+  if (z1==0) {z1<-lF$torusZ()}
+  return((x1-1)+(y1-1)*lF$torusX()+(z1-1)*lF$torusX()*lF$torusY()) }
+
+pos<-n2xyz(lF)
+p1<-xyz2n(((pos[1]+1) %% lF$torusX()), pos[2], pos[3], lF)
+p2<-xyz2n(((pos[1]-1) %% lF$torusX()), pos[2], pos[3], lF)
+p3<-xyz2n(pos[1], ((pos[2]+1) %% lF$torusY()), pos[3], lF)
+p4<-xyz2n(pos[1], ((pos[2]-1) %% lF$torusY()), pos[3], lF)
+p5<-xyz2n(pos[1], pos[2], ((pos[3]+1) %% lF$torusZ()), lF)
+p6<-xyz2n(pos[1], pos[2], ((pos[3]-1) %% lF$torusZ()), lF)
+
+return(c(p1, p2, p3, p4, p5, p6))
 }
 
 #' Select one or more random neighbors from all neighbors. 
@@ -269,6 +333,8 @@ gPetersenTop<-function(lF)
 #'                  as message receiver.
 #'  \item "torus2D": Returns a function which selects the neighbours 
 #'                   on a 2D-torus.
+#'  \item "torus3D": Returns a function which selects the neighbours 
+#'                   on a 3D-torus.
 #'  \item "gPetersen": Returns a function which selects the neigbors of the process in a 
 #'                     generalized Petersen Graph PG(n, k). The number of processes must be
 #'                     \code{2n}, and \code{1<k<n}. 
@@ -290,6 +356,7 @@ xegaCommunicationTopologyFactory<-function(method="random")
    if (method=="ring") {f<-ringTop}
    if (method=="ring2") {f<-ring2Top}
    if (method=="torus2D") {f<-torus2DTop}
+   if (method=="torus3D") {f<-torus3DTop}
    if (method=="gPetersen") {f<-gPetersenTop}
 if (!exists("f", inherits=FALSE))
         {stop("xegaCommunicationTopology Factory label ", method, " does not exist")}

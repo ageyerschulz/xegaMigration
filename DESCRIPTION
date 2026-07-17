@@ -1,6 +1,6 @@
 Package: xegaMigration 
 Title: xega Island Models
-Version: 0.5.0.3
+Version: 0.5.0.4
 Authors@R: c(
     person(given = "Andreas",
            family = "Geyer-Schulz",

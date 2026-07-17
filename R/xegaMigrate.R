@@ -126,6 +126,10 @@ if (LTP)
 }
 pop<-population
 # 3. Select emigrants and send them to other islands.
+msgSent<-list()
+slowestPid<-lF$slowestPid()
+if (lF$improved())
+{
 midx<-lF$SelMigrant(fit, lF, size=lF$Nmigrants())
 emigrants<-population[midx]
 ### Problem here for forecast!
@@ -145,6 +149,7 @@ msgSent<-list(list(genes=emigrants,
                    slowestTime=slowestTime, 
                    slowestPid=slowestPid))
 rc<-lF$Send(msgSent, lF)
+}
 # 4. Receive immigrants from other islands and replace genes.
 msgReceived<-list()
 msgReceived$data<-lF$Receive(lF)

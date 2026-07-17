@@ -62,6 +62,56 @@ test_that("torus2DTop OK",
  }
 )
 
+test_that("torus3DTop OK",
+ {
+ lF<-list()
+ lF$torusX<-function() {3}
+ lF$torusY<-function() {3}
+ lF$torusZ<-function() {3}
+ lF$pid<-function() {0} # node 0
+ v<-torus3DTop(lF)
+ expect_identical(1, v[1])
+ expect_identical(2, v[2])
+ expect_identical(3, v[3])
+ expect_identical(6, v[4])
+ expect_identical(9, v[5])
+ expect_identical(18, v[6])
+ lF$pid<-function() {1} # node 1
+ v<-torus3DTop(lF)
+ expect_identical(2, v[1])
+ expect_identical(0, v[2])
+ expect_identical(4, v[3])
+ expect_identical(7, v[4])
+ expect_identical(10, v[5])
+ expect_identical(19, v[6])
+ lF$pid<-function() {2} # node 2
+ v<-torus3DTop(lF)
+ expect_identical(0, v[1])
+ expect_identical(1, v[2])
+ expect_identical(5, v[3])
+ expect_identical(8, v[4])
+ expect_identical(11, v[5])
+ expect_identical(20, v[6])
+ lF$pid<-function() {13} # node 13
+ v<-torus3DTop(lF)
+ expect_identical(14, v[1])
+ expect_identical(12, v[2])
+ expect_identical(16, v[3])
+ expect_identical(10, v[4])
+ expect_identical(22, v[5])
+ expect_identical(4, v[6])
+ lF$pid<-function() {26} # node 26
+ v<-torus3DTop(lF)
+ expect_identical(24, v[1])
+ expect_identical(25, v[2])
+ expect_identical(20, v[3])
+ expect_identical(23, v[4])
+ expect_identical(8, v[5])
+ expect_identical(17, v[6])
+ }
+)
+
+
 test_that("rndTop OK",
  {
  lF<-list()
