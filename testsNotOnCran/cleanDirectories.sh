@@ -16,4 +16,5 @@ rm -rf ./test9A/
 rm -rf ./test10/
 rm -rf ./test11/
 rm -rf ./test12/
+rm -rf ./test13/
 

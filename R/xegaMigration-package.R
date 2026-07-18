@@ -22,8 +22,6 @@
 #'       }
 #' }
 #'       
-#'
-#'
 #' @section The Migration Algorithm: 
 #'
 #' \enumerate{
@@ -38,8 +36,6 @@
 #'       by immigrants.
 #' \item Update generation limit and identify slowest pid.
 #' }
-#'
-#' @section An Adaptive Completely Decentral Migration Strategy:
 #'
 #' @section The Asynchronous Message Exchange Protocol:
 #' 
@@ -109,11 +105,32 @@
 #'  mpi    \tab mpiBroadcastTerm()  \tab mpiProbeTerm()     \cr 
 #'  }
 #' 
+#' @section Collection of Results:
+#'
+#' By convention, the process with pid \code{0} is considered as master process
+#' which receives the results.
+#' All other processes send their processes to pid \code{0}. 
+#' 
+#'  \tabular{ccc}{ 
+#'         \tab \strong{Function} \tab \strong{uses:}   \cr
+#'  rds    \tab rdsCollect()  \tab  readRDS() with error handling     \cr 
+#'  mpi    \tab mpiCollect()   \tab If \code{pid==0}: mpiReceiveResult() \cr
+#'         \tab                \tab If \code{not(pid==0)}: mpiSendResult() \cr 
+#'  }
+#'
+#'
+#' @section mpi and rds Communication Primitives:
+#'
+#' mpi and rds use communication primitives with the same semantics.
+#' However, at the moment all collective mpi primitives (except 
+#' \code{Rmpi::mpi.barrier()}) are avoided.
+#' \tabular{ccc}{
+#' send R-object from x to y (gene) \tab mpiSendGenes()  \tab rdsSendGenes() \cr
+#'           uses          \tab Rmpi::mpi.send.Robj() \tab          \cr
+#' Loose synchronization \tab Rmpi::mpi.barrier() \tab rdsBarrier()   \cr 
+#' }
+#'
 #' @section rds Communication Primitives:
-#'
-#' ccc
-#'
-#' @section mpi Communication Primitives:
 #'
 #' ddd
 #'

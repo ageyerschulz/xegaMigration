@@ -136,9 +136,15 @@ mkdir ./test11
 ./rdsRun25.sh test-11-run.R
 echo "[test-11-run.R: finished]"
 
-echo "[test-12-run.R: ... random 25, rdsb and collect results.]"
+echo "[test-12-run.R: ... torus2D 25, rdsb and collect results.]"
 rm -rf ./test12/
 mkdir ./test12
 ./rdsRun25.sh test-12-run.R
 echo "[test-12-run.R: finished]"
+
+echo "[test-13-run.R: ... torus3D 64, OnImprovement, rdsb and collect results.]"
+rm -rf ./test13/
+mkdir ./test13
+./rdsRun64.sh test-13-run.R
+echo "[test-13-run.R: finished]"
 
