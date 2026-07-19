@@ -61,10 +61,6 @@ for (i in (1:length(dest)))
 invisible(0)
 }
 
-## Description missing
-## mpi send
-
-
 #' Send genes to neighbor process(es).
 #'
 #' @description A list of genes (the emigrants) 

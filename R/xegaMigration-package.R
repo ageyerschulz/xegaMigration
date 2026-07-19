@@ -19,10 +19,18 @@
 #'             (reaches the optimal solution),
 #'       \item the slowest processor reaches its generation limit.
 #'             It is not known which of the processes is the slowest.
+#' \item The hardware/software requirements should be low
+#'       and the software should be scalable. 
+#'
+#'       The first requirement is addressed by providing process communication 
+#'       via file I/O on a shared file system (rds) and can be used 
+#'       with just base R and xega for Linux and macOS operating systems.
+#'       
+#'       Scalability is supported by process communication via mpi.
 #'       }
 #' }
 #'       
-#' @section The Migration Algorithm: 
+#' @section The (Basic) Migration Algorithm: 
 #'
 #' \enumerate{
 #' \item Probe (non-blocking) for a distributed termination predicate DTP.
@@ -31,12 +39,17 @@
 #' \item If local termination predicate LTP, broadcast termination signal
 #'       to other islands. (asynchronous termination protocol).
 #' \item Select emigrants from population and send emigrants 
-#'       to other islands (asynchronous message exchange protocol).
+#'       to neighboring islands (asynchronous message exchange protocol).
+#'       The neighborhood of an island is defined by the communication 
+#'       topology graph. (With the \code{xegaRun()} 
+#'       option \code{migrate="OnImprovement"} 
+#'       the emigration step is skipped, if no fitness improvement 
+#'       has occured in the last generation.
 #' \item Receive immigrants and replace genes in population 
 #'       by immigrants (asynchronous message exchange protocol or
 #'       barrier synchronization followed by asynchronous message exchange
 #'       protocol).
-#' \item Update generation limit and identify slowest pid.
+#' \item Update the generation limit and identify the slowest pid.
 #' }
 #'
 #' @section The Asynchronous Message Exchange Protocol:
@@ -109,6 +122,13 @@
 #' 
 #' @section Collection of Results:
 #'
+#' Island models may use thousands of loosely-coupled concurrent 
+#' genetic algorithms each of which produces its own xegaRun result object.
+#' For convenience, the user may configure a result collection step
+#' which produces a single result object which consists of the list 
+#' of all xegaRun objects and a return code which indicates if 
+#' the results of all island processes have been collected successfully.
+#' 
 #' By convention, the process with pid \code{0} is considered as master process
 #' which receives the results.
 #' All other processes send their processes to pid \code{0}. 
@@ -138,7 +158,35 @@
 #'
 #' @section rds Communication Primitives:
 #'
-#' ddd
+#' rds communication primitives rely on file name conventions:
+#' \itemize{
+#' \item \strong{Message Exchange Protocol.}
+#'       File names produced by \strong{rdsSendGenes()}
+#'       and used by \strong{rdsReceiveGenes()}:
+#'
+#'       From<pid>To<pid>RND<random digits>.rds
+#'
+#' \item \strong{Termination Protocol.}
+#'       File names produced by \strong{rdsBroadcastTerm()}    
+#'       and used \strong{rdsProbeTerm()}:
+#'
+#'       TermFrom<pid>ToAllRND<random digits>.rds
+#'
+#' \item \strong{Barrier synchronization.}
+#'       File names produced and used by \strong{rdsBarrier()}:  
+#'
+#'       Barrier<pid>pad<random digits>.rds
+#'
+#' \item \strong{Result Collection.}
+#'      File names produced by \strong{xegaRun()} of island processes and   
+#'      used by \strong{xegaRun()} of process \code{0}:     
+#'
+#'      xegaResult<exclusive pattern>.rds
+#'     
+#'      File name produced by \strong{xegaRun()} of island process \code{0}:
+#'
+#'      xegaIResult<exclusive pattern>.rds
+#' }
 #'
 "_PACKAGE"
 

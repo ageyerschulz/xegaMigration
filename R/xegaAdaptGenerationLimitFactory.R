@@ -13,8 +13,6 @@
 #'              the slowest island process in order to keep all processors 
 #'              busy as long as the slowest process runs.
 #'
-#' @details     The current naive forecast is not reliable yet.
-#'
 #' @param lF      Local function configuration.
 #'
 #' @return The (new) number of generations (integer). 
