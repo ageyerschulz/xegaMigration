@@ -5,14 +5,14 @@
 #' @section An Adaptive Completely Decentral Migration Strategy:
 #'
 #' The goal of the migration strategy of \code{xega} is to exploit 
-#' the computing power of a set of loosely coupled processors is 
+#' the computing power of a set of loosely coupled processors as 
 #' well as possible: 
 #' \itemize{
 #' \item The number of messages exchanged between 
 #'       islands should be small (and configurable).  
 #' \item The communication topology should be configurable.
 #' \item All processes should terminate almost at the same time,
-#'       so that no processor is idle. 
+#'       so that no processor is idle for an extended period of time.
 #' \item The algorithm should terminate, when either
 #'       \itemize{
 #'       \item one process fulfills a local termination predicate
@@ -26,14 +26,16 @@
 #'
 #' \enumerate{
 #' \item Probe (non-blocking) for a distributed termination predicate DTP.
-#'       from other islands.
+#'       from other islands (asynchronous termination protocol).
 #'       If a distributed termination predicate is set, return DTP to main.
 #' \item If local termination predicate LTP, broadcast termination signal
-#'       to other islands.
-#' \item Select emigrants from population and send emigrants to 
-#'       to other islands.
+#'       to other islands. (asynchronous termination protocol).
+#' \item Select emigrants from population and send emigrants 
+#'       to other islands (asynchronous message exchange protocol).
 #' \item Receive immigrants and replace genes in population 
-#'       by immigrants.
+#'       by immigrants (asynchronous message exchange protocol or
+#'       barrier synchronization followed by asynchronous message exchange
+#'       protocol).
 #' \item Update generation limit and identify slowest pid.
 #' }
 #'
@@ -58,14 +60,14 @@
 #' @section Synchronization of Island Processes:
 #'
 #' Synchronization of island processes is achieved by implementing 
-#' a message receive function which invokes a barrier function 
+#' a blocking message receive function which invokes a barrier function 
 #' which blocks until all island processes reach the barrier
-#' before the message receive function is called.
+#' before the asynchronous message receive function is called.
 #'
 #'  \tabular{ccc}{
-#'         \tab \strong{Barrier} \tab \strong{Receive}   \cr
-#'  rds    \tab rdsBarrier()     \tab rdsReceiveGenesBlocking() \cr 
-#'  mpi    \tab Rmpi::mpiBarrier() \tab mpiReceiveGenesBlocking() \cr 
+#'      \tab \strong{Receive}          \tab \strong{Barrier Used} \cr
+#'  rds \tab rdsReceiveGenesBlocking() \tab rdsBarrier()          \cr 
+#'  mpi \tab mpiReceiveGenesBlocking() \tab Rmpi::mpiBarrier()    \cr 
 #'  }
 #'
 #' @section The (Asynchronous) Termination Protocol:
@@ -125,8 +127,12 @@
 #' However, at the moment all collective mpi primitives (except 
 #' \code{Rmpi::mpi.barrier()}) are avoided.
 #' \tabular{ccc}{
-#' send R-object from x to y (gene) \tab mpiSendGenes()  \tab rdsSendGenes() \cr
+#' send gene(s) from x to y (gene) \tab mpiSendGenes()  \tab rdsSendGenes() \cr
 #'           uses          \tab Rmpi::mpi.send.Robj() \tab          \cr
+#' receive gene(s) from any pid \tab mpiReceiveGenes \tab rdsReceiveGenes() \cr
+#'           uses        \tab Rmpi::mpi.iprobe()  \tab      \cr
+#'                       \tab Rmpi::mpi.any.source() \tab   \cr
+#'                       \tab Rmpi::mpi.recv.Robj() \tab   \cr 
 #' Loose synchronization \tab Rmpi::mpi.barrier() \tab rdsBarrier()   \cr 
 #' }
 #'
