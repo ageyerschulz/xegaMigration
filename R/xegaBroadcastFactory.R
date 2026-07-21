@@ -46,7 +46,8 @@ rdsBroadcastTerm<-function(lF)
 #'          \code{mpi.iprobe()}, \code{mpi.any.source()}, 
 #'          and \code{mpi.recv.Robj()}.       
 #'
-#'          The termination messages are sent to all processes. 
+#'          The termination messages (tag=7) are sent to all processes 
+#'          with pids ranging from \code{0} to \code{lF$npid()}.
 #'          The message that the broadcaster sends to himself 
 #'          is not received and remains in the mpi queue.
 #'

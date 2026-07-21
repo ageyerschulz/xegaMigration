@@ -88,7 +88,7 @@ return(result)
 #'
 #' @param report   A migration report.
 #'
-#' @return Innvisible 0.
+#' @return Invisible 0.
 #'
 #' @family Reporting
 #'

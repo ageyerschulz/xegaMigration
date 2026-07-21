@@ -18,10 +18,10 @@ Description:
     for island models of extended and evolutionary algorithms 
     (see Tomassini, Marco (2005, ISBN:978-3-540-24193-5)) for the 
     R-package xega <https://CRAN.R-project.org/package=xega>.
-    Basic asynchronous as wells as synchronized communication primitives 
+    Basic asynchronous as well as synchronized communication primitives 
     are supplied based on file I/O operations (rds) on a shared file system 
-    or on openMPI (mpi) messages.  The gene selection and replacement 
-    strategies as well as the communication topology 
+    or by openMPI (mpi) messages.  The gene selection and replacement 
+    strategies, the migration policy as well as the communication topology 
     between islands are configurable.  
     Homegenous and heterogenous island algorithms are supported. 
     For examples (R and shell-scripts), see

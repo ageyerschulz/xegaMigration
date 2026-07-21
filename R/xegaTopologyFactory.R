@@ -222,11 +222,12 @@ rndTop<-function(lF)
 #'
 #' @details Each processing unit in GP(n, k) has exactly three neighbours
 #'   (the graph is cubic). \code{gpTop()} returns all three by
-#'   default. TODO: The receiver count and migration semantics still
-#'   flow through \code{lF$Nmigrants()} as in the rest of the
-#'   migration pipeline; \code{gpTop()} only specifies *which*
-#'   ranks may receive.
-#'   (Author: M. Zamani-Shandiz.)
+#'   default. 
+#   TODO: The receiver count and migration semantics still
+#   flow through \code{lF$Nmigrants()} as in the rest of the
+#   migration pipeline; \code{gpTop()} only specifies *which*
+#   ranks may receive.
+#   (Author: M. Zamani-Shandiz.)
 #'
 #' @param  lF  Local function configuration.
 #'             Required elements are

@@ -8,11 +8,13 @@
 #' the computing power of a set of loosely coupled processors as 
 #' well as possible: 
 #' \itemize{
+#' \item Processes should not wait.
+#' \item All processes should terminate almost at the same time,
+#'       so that no processor is idle for an extended period of time.
+#' \item Migration policies (e.g. on improvement) should be configurable.
 #' \item The number of messages exchanged between 
 #'       islands should be small (and configurable).  
 #' \item The communication topology should be configurable.
-#' \item All processes should terminate almost at the same time,
-#'       so that no processor is idle for an extended period of time.
 #' \item The algorithm should terminate, when either
 #'       \itemize{
 #'       \item one process fulfills a local termination predicate
@@ -30,6 +32,16 @@
 #'       }
 #' }
 #'       
+#' Island models require the following communication protocols
+#' between island algorithms:
+#'
+#' \enumerate{
+#' \item  An (asynchronous) message exchange protocol.
+#' \item  A synchronization mechanism (optional).
+#' \item  An (asynchronous) Termination protocol.
+#' \item  A result collection protocol (optional).
+#' }
+#'
 #' @section The (Basic) Migration Algorithm: 
 #'
 #' \enumerate{
@@ -67,14 +79,15 @@
 #'  \tabular{ccc}{
 #'         \tab \strong{Send} \tab \strong{Receive}   \cr
 #'  rds    \tab rdsSend()     \tab rdsReceiveGenes() \cr 
-#'  mpi    \tab mpiSend() \tab mpiReceiveGenes() \cr 
+#'  mpi    \tab mpiSend() \tab mpiReceiveGenes() with message tag 9 \cr 
 #'  }
 #'
 #' @section Synchronization of Island Processes:
 #'
 #' Synchronization of island processes is achieved by implementing 
-#' a blocking message receive function which invokes a barrier function 
-#' which blocks until all island processes reach the barrier
+#' a blocking message receive function which uses barrier 
+#' synchronization (a barrier function 
+#' which blocks until all island processes reach the barrier)
 #' before the asynchronous message receive function is called.
 #'
 #'  \tabular{ccc}{
@@ -117,7 +130,7 @@
 #'  \tabular{ccc}{
 #'         \tab \strong{Terminator} \tab \strong{terminated} \cr
 #'  rds    \tab rdsBroadcastTerm()  \tab rdsProbeTerm()     \cr 
-#'  mpi    \tab mpiBroadcastTerm()  \tab mpiProbeTerm()     \cr 
+#'  mpi    \tab mpiBroadcastTerm()  \tab mpiProbeTerm() with message tag 7 \cr 
 #'  }
 #' 
 #' @section Collection of Results:
@@ -136,8 +149,8 @@
 #'  \tabular{ccc}{ 
 #'         \tab \strong{Function} \tab \strong{uses:}   \cr
 #'  rds    \tab rdsCollect()  \tab  readRDS() with error handling     \cr 
-#'  mpi    \tab mpiCollect()   \tab If \code{pid==0}: mpiReceiveResult() \cr
-#'         \tab                \tab If \code{not(pid==0)}: mpiSendResult() \cr 
+#'  mpi    \tab mpiCollect()   \tab If \code{pid==0}: mpiReceiveResult() with message tag 8 \cr
+#'         \tab                \tab If \code{not(pid==0)}: mpiSendResult() with message tag 8 \cr 
 #'  }
 #'
 #'
@@ -158,7 +171,16 @@
 #'
 #' @section rds Communication Primitives:
 #'
+#' It is assumed that all island algorithms of a single island model
+#' have exclusive read/write access to a directory on the shared file 
+#' system. The atomicity of file operations is guaranteed by the file 
+#' naming conventions defined below. \emph{Probing} is implemented by 
+#' file existence tests. However, (rare) file read errors are caught by 
+#' error handling and delayed retry. File read errors may occur if an 
+#' attempt is made to read a file which has not yet been completely written.  
+#'  
 #' rds communication primitives rely on file name conventions:
+#'
 #' \itemize{
 #' \item \strong{Message Exchange Protocol.}
 #'       File names produced by \strong{rdsSendGenes()}
