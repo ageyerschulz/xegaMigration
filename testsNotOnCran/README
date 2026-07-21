@@ -1,7 +1,4 @@
 
-TODO: We need filelocks for collection, or we do spin until all files 
-      are present in process 0.
-
 Testing the Island Models of the R-Package xegaMigration.
 
 Testing the island models of the R-package xegaMigration 
@@ -10,6 +7,10 @@ the properties of the distributed algorithms used.
 xegaMigration uses either the communication primitives 
 of mpi or semantically equivalent communication primitives
 using a common file system (the rds-file I/O of base R). 
+
+To run all test cases (this may take several hours):
+
+./allTests.sh
 
 Test Cases.
 
@@ -92,4 +93,61 @@ test-7C-run.R: rds communication.
     - collect=TRUE
     - CommunicationTopology="random", nrecv=2
    
+test-8A-run.R: rds communication.
+     - order [a] 0<1<2<3
+     - collect=TRUE
+     - CommunicationTopology="ring"
+    
+test-8B-run.R: mpi communication. 
+    - order [b] 1<2<3<0
+    - collect=TRUE
+    - CommunicationTopology="random", nrecv=1
+
+test-8C-run.R: mpi communication.
+    - order [c] 2<1<0<3
+    - collect=TRUE
+    - CommunicationTopology="random", nrecv=2
+
+test-9-run.R: rds communication.
+    - collect=TRUE
+    - CommunicationTopology="gPetersen",   (Petersen(5, 2).
+    - mutrate=0.0
+    - crossrate=0.0 
+
+test-9A-run.R: mpi communication.
+    - collect=TRUE
+    - migrationDebug=TRUE
+    - CommunicationTopology="gPetersen",   (Petersen(4, 2).
+    - mutrate=0.0
+    - crossrate=0.0 
+
+test-10-run.R: rdsb communication.
+    - collect=TRUE
+    - CommunicationTopology="gPetersen",   (Petersen(5, 2).
+
+test-11-run.R: rdsb communication. (+ cores=2 MultiCore).
+    - npid=25           (50 processes)
+    - popsize=1000
+    - generations=100
+    - collect=TRUE
+    - CommunicationTopology="random"
+
+test-12-run.R: rdsb communication. (+ cores=2 MultiCore).
+    - npid=25           (50 processes)
+    - popsize=1000
+    - generations=100
+    - collect=TRUE
+    - CommunicationTopology="torus2D",  torusX=5, torusY=5).
+
+test-13-run.R: rdsb communication. (+ cores=2 MultiCore).
+    - npid=64           (128 processes)
+    - popsize=1000
+    - generations=100
+    - mutrate=0.6
+    - crossrate= 0.25
+    - max2opt =100
+    - migrate = "OnImprovement"
+    - collect=TRUE
+    - migrationDebug=TRUE
+    - CommunicationTopology="torus3D",  torusX=4, torusY=4, torusZ=4).
 

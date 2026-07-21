@@ -1,7 +1,8 @@
 #!/bin/sh
+echo "./cleanDirectories.sh"
+./cleanDirectories.sh
 echo "[buildTSPlin105.R: Build 2 configurations.]"
 Rscript buildTSPlin105.R
-
 echo "[test-1-run.R: communication=mpi, npid=4, cores/pid=2, migrateEvery=2]"
 rm -rf ./test1/
 mkdir ./test1
