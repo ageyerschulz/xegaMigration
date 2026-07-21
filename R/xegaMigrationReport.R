@@ -86,15 +86,45 @@ return(result)
 
 #' Print migration report.
 #'
-#' @param report   A migration report.
+#' @description A migration report is a list of named lists.
+#'    A named list has the following elements:
+#'    \itemize{
+#'    \item \code{$timems}: Time in milliseconds.
+#'    \item \code{$iterations}: Iteration number.
+#'    \item \code{$type}: "E" for (E)migrant or "I" for (I)mmigrant.
+#'    \item \code{$pid}: pid. 
+#'    \item \code{$tpid}: pid. 
+#'    \item \code{$fit}: Fitness.
+#'    }
+#'
+#'    For emigrants, the gene has been sent from \code{$pid} to \code{$tpid}.
+#' 
+#'    For immigrants, the gene has been received by \code{$pid} from \code{$tpid}.
+#'
+#' @details Each gene which migrates occurs twice in a complete migration report:
+#'          first as an emigrant and then as an immigrant.
+#'
+#'          The time resolution is supposed to help in ordering genes. However, 
+#'          no perfect order of messages sent and received can be established from 
+#'          the time stamp, because the time resolution is too coarse.
+#'
+#' @param report   A migration report. 
 #'
 #' @return Invisible 0.
 #'
 #' @family Reporting
 #'
 #' @examples
-#' cat("TODO\n")
-#'
+#' msg2<-msg1<-list();
+#' msg1$timems<-as.numeric(Sys.time())
+#' msg1$iteration<-7; msg2$iteration<-6
+#' msg1$type<-"I"; msg2$type<-"E"
+#' msg1$pid<-0; msg2$pid<-0
+#' msg1$tpid<-2; msg2$tpid<-3
+#' msg1$fit<-27.33; msg2$fit<-26.49
+#' msg2$timems<-as.numeric(Sys.time())
+#' r<-list(); r[[1]]<-msg1; r[[2]]<-msg2
+#' xegaShowMigrationReport(r)
 #'@export
 xegaShowMigrationReport<-function(report)
 {

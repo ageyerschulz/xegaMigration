@@ -73,14 +73,14 @@ invisible(0)
 #'
 #' @details   Expects \code{Rmpi::mpi.send.Robj} bound to 
 #'              \code{lF$RmpiFNS$mpi.send.Robj}. 
-#'            The mpi message must be tagged with $9$.  
+#'            The MPI message must be tagged with $9$.  
 #'
 #' @param genes   A gene list.
 #' @param lF      Local function configuration.
 #'
 #' @return 0 (invisible) 
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiSendGenes<-function(genes, lF)
@@ -99,14 +99,14 @@ invisible(0)
 #'
 #' @details   Expects \code{Rmpi::mpi.send.Robj} bound to 
 #'              \code{lF$RmpiFNS$mpi.send.Robj}. 
-#'            The mpi message must be tagged with $8$.  
+#'            The MPI message must be tagged with $8$.  
 #'
 #' @param result  The result of the island algorithm.
 #' @param lF      Local function configuration.
 #'
 #' @return 0 (invisible) 
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiSendResults<-function(result, lF)
@@ -121,8 +121,8 @@ invisible(0)
 #' Avalailable methods: 
 #' \enumerate{
 #'  \item "rds": Message sending genes via rds-file I/O.
-#'  \item "mpi": Message sending genes via mpi. Code with comments.
-#  \item "mpiResult": Message sending results via mpi. Code with comments.
+#'  \item "mpi": Message sending genes via MPI. 
+#  \item "mpiResult": Message sending results via MPI. 
 #'  }
 #'
 #' @param method    Method. Default: "rds".

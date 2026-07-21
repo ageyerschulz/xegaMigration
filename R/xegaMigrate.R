@@ -43,7 +43,8 @@ NewLFxegaMigrate<-function()
 
 #' Migrate genes.
 #'
-#' @description The migration algorithm performs the following steps:
+#' @description The migration algorithm performs the following steps
+#'              (neglecting termination):
 #'    \enumerate{
 #'    \item Select emigrants.
 #'    \item Send emigrants to recipients defined by the communication topology.
@@ -51,12 +52,20 @@ NewLFxegaMigrate<-function()
 #'    \item Replace some genes in the population by immigrants.
 #'    } 
 #'     
-#' @details The classic non-blocking migration strategy is:
+#' @details The classic non-blocking migration strategy with termination is
+#'          (simplified) 
 #'    \enumerate{
+#'    \item Probe for termination signals of other islands. 
+#'          If such a termination signal exists, return a termination signal.
+#'    \item If a local termination signal exists, broadcast termination 
+#'          to other islands and return a termination signal.
 #'    \item Select the best gene.          
 #'    \item Send it to the neigbor (in a ring topology).
 #'    \item Receive immigrants from the neighbor (in a ring topology).
-#'    \item If there are immigrants, replace the worst genes by the immigrants.  
+#'    \item If there are immigrants, replace the worst genes by the immigrants. 
+#'    \item Update generation limit and slowest pid.
+#'    \item Return population (with immigrants), generation limit, 
+#'          slowest time, and slowest pid.
 #'    }
 #'  
 #' @param population   A population. 
@@ -70,6 +79,9 @@ NewLFxegaMigrate<-function()
 #'         \enumerate{
 #'            \item $DTP   Boolean. Distributed termination predicate. 
 #'            \item $generationLimit  Integer. How many generations?
+#'            \item $slowestTime      Integer. The execution time of the 
+#'                                    slowest process.
+#'            \item $slowestpid       Integer. The pid of the slowest process.
 #'         }
 #'         }
 #'

@@ -65,11 +65,7 @@ fns<-fns[grepl(pat2, fns)]
 if (length(fns)==0) {return(FALSE)}
 return(TRUE)}
 
-## Description missing
-## mpi probe
-
-
-#' Probes for termination message(s) (mpi).
+#' Probes for termination message(s) (MPI).
 #'
 #' @description Probes for termination messages (\code{tag=7}). 
 #'              If messages exist, returns \code{TRUE} for 
@@ -84,7 +80,7 @@ return(TRUE)}
 #' @return Boolean. \code{TRUE} indicates that a termination message
 #'                  has been received and that the process should terminate.
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiProbeTerm<-function(lF)
@@ -101,7 +97,7 @@ return(DPT)
 #' Avalailable methods: 
 #' \enumerate{
 #'  \item "rds": Probing for termination rds-file.
-#'  \item "mpi": Probing for termination message via mpi. Code with comments.
+#'  \item "mpi": Probing for termination message via MPI.
 #'  }
 #'
 #' @param method    Method. Default: "rds".

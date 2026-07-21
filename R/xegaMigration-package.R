@@ -28,7 +28,7 @@
 #'       via file I/O on a shared file system (rds) and can be used 
 #'       with just base R and xega for Linux and macOS operating systems.
 #'       
-#'       Scalability is supported by process communication via mpi.
+#'       Scalability is supported by process communication via MPI.
 #'       }
 #' }
 #'       
@@ -79,7 +79,7 @@
 #'  \tabular{ccc}{
 #'         \tab \strong{Send} \tab \strong{Receive}   \cr
 #'  rds    \tab rdsSend()     \tab rdsReceiveGenes() \cr 
-#'  mpi    \tab mpiSend() \tab mpiReceiveGenes() with message tag 9 \cr 
+#'  MPI    \tab mpiSend() \tab mpiReceiveGenes() with message tag 9 \cr 
 #'  }
 #'
 #' @section Synchronization of Island Processes:
@@ -93,7 +93,7 @@
 #'  \tabular{ccc}{
 #'      \tab \strong{Receive}          \tab \strong{Barrier Used} \cr
 #'  rds \tab rdsReceiveGenesBlocking() \tab rdsBarrier()          \cr 
-#'  mpi \tab mpiReceiveGenesBlocking() \tab Rmpi::mpiBarrier()    \cr 
+#'  MPI \tab mpiReceiveGenesBlocking() \tab Rmpi::mpiBarrier()    \cr 
 #'  }
 #'
 #' @section The (Asynchronous) Termination Protocol:
@@ -115,16 +115,16 @@
 #'       file and if the file exists, it terminates.   
 #'       The termination file remains in the shared directory and is 
 #'       not deleted.
-#' \item \code{mpi} communication.
-#'       All island processes are members of the mpi communication area 1 and
-#'       share a mpi message bus. The \strong{terminator} sends a 
+#' \item \code{MPI} communication.
+#'       All island processes are members of the MPI communication area 1 and
+#'       share a MPI message bus. The \strong{terminator} sends a 
 #'       termination message with tag 7 to the \strong{terminated} 
 #'       processes. 
 #'       Each \strong{terminated} process tests for the existence of 
 #'       a termination message with tag 7, and if such messages exist,
 #'       it consumes them and terminates.
 #'       The termination message which the \strong{terminator} has sent 
-#'       to itself is not consumed and remains on the mpi message bus.
+#'       to itself is not consumed and remains on the MPI message bus.
 #' }
 #'
 #'  \tabular{ccc}{
@@ -149,15 +149,15 @@
 #'  \tabular{ccc}{ 
 #'         \tab \strong{Function} \tab \strong{uses:}   \cr
 #'  rds    \tab rdsCollect()  \tab  readRDS() with error handling     \cr 
-#'  mpi    \tab mpiCollect()   \tab If \code{pid==0}: mpiReceiveResult() with message tag 8 \cr
+#'  MPI    \tab mpiCollect()   \tab If \code{pid==0}: mpiReceiveResult() with message tag 8 \cr
 #'         \tab                \tab If \code{not(pid==0)}: mpiSendResult() with message tag 8 \cr 
 #'  }
 #'
 #'
-#' @section mpi and rds Communication Primitives:
+#' @section MPI and rds Communication Primitives:
 #'
-#' mpi and rds use communication primitives with the same semantics.
-#' However, at the moment all collective mpi primitives (except 
+#' MPI and rds use communication primitives with the same semantics.
+#' However, at the moment all collective MPI primitives (except 
 #' \code{Rmpi::mpi.barrier()}) are avoided.
 #' \tabular{ccc}{
 #' send gene(s) from x to y (gene) \tab mpiSendGenes()  \tab rdsSendGenes() \cr

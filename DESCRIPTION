@@ -1,5 +1,5 @@
 Package: xegaMigration 
-Title: xega Island Models
+Title: Xega Island Models
 Version: 0.5.0.4
 Authors@R: c(
     person(given = "Andreas",
@@ -20,10 +20,10 @@ Description:
     R-package xega <https://CRAN.R-project.org/package=xega>.
     Basic asynchronous as well as synchronized communication primitives 
     are supplied based on file I/O operations (rds) on a shared file system 
-    or by openMPI (mpi) messages.  The gene selection and replacement 
+    or by openMPI (MPI) messages.  The gene selection and replacement 
     strategies, the migration policy as well as the communication topology 
     between islands are configurable.  
-    Homegenous and heterogenous island algorithms are supported. 
+    Homogeneous and heterogeneous island algorithms are supported. 
     For examples (R and shell-scripts), see
     <https://github.com/ageyerschulz/xega/tree/main/examples/IslandModels>.
 License: MIT + file LICENSE

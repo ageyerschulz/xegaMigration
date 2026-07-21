@@ -8,6 +8,9 @@
 
 #' Receive genes from neighbor processes (non-blocking).
 #'
+#' @description Multiple messages are received, if they exist
+#'              (non-blocking).  
+#'
 #' @param lF      Local function configuration.
 #'
 #' @return A gene list. 
@@ -51,6 +54,8 @@ return(genes) }
 
 #' Receive genes from neighbor processes (blocking).
 #'
+#' @description Blocking means barrier synchronization.
+#'              
 #' @param lF      Local function configuration.
 #'
 #' @return A gene list. 
@@ -64,16 +69,16 @@ rdsReceiveGenesBlocking<-function(lF)
 
 #' Receive genes from neighbor processes (non-blocking).
 #'
-#' @description Multiple mpi messages are received, if they exist
+#' @description Multiple MPI messages are received, if they exist
 #'              (non-blocking).  
-#'              Test for existence of message: mpi.iprobe()
-#'              and message receive: mpi.recv.Robj().  
+#'              Test for existence of message: Rmpi::mpi.iprobe()
+#'              and message receive: Rmpi::mpi.recv.Robj().  
 #'
 #' @param lF      Local function configuration.
 #'
 #' @return A gene list. 
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiReceiveGenes<-function(lF)
@@ -93,7 +98,7 @@ return(genes)
 #'
 #' @return  A result object or an empty list.
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiReceiveResult<-function(lF)
@@ -105,8 +110,8 @@ return(result)
 
 #' Receive genes from neighbor processes (blocking).
 #'
-#' @description Multiple mpi messages are received, if they exist
-#'              (blocking).  
+#' @description Blocking means barrier synchronization.
+#'              Multiple MPI messages are received, if they exist.
 #'              Test for existence of message (blocks): mpi.probe() 
 #'              and message receive: mpi.recv.Robj().  
 #'
@@ -114,7 +119,7 @@ return(result)
 #'
 #' @return A gene list. 
 #'
-#' @family mpi communication
+#' @family MPI communication
 #'
 #' @export
 mpiReceiveGenesBlocking<-function(lF)
@@ -126,9 +131,10 @@ mpiReceiveGenesBlocking<-function(lF)
 #' Avalailable methods: 
 #' \enumerate{
 #'  \item "rds": Message receiving via rds-file I/O. Non-blocking.
-#'  \item "rdsb": Message receiving via rds-file I/O. Blocking.
+#'  \item "rdsb": Message receiving via rds-file I/O. Barrier synchronization.
 #'  \item "mpi": Message receiving via mpi. Code with comments. Non-blocking.
-#'  \item "mpib": Message receiving via mpi. Code with comments. Blocking.
+#'  \item "mpib": Message receiving via mpi. Code with comments. 
+#'                Barrier synchronization. 
 #'  }
 #'
 #' @param method    Method. Default: "rds".
