@@ -1,5 +1,5 @@
 Package: xegaMigration 
-Title: Xega Island Models
+Title: 'Xega' Island Models
 Version: 0.5.0.4
 Authors@R: c(
     person(given = "Andreas",
@@ -17,10 +17,10 @@ Description:
     Implements asynchronous message-passing communication protocols
     for island models of extended and evolutionary algorithms 
     (see Tomassini, Marco (2005, ISBN:978-3-540-24193-5)) for the 
-    R-package xega <https://CRAN.R-project.org/package=xega>.
+    R-package 'xega' <https://CRAN.R-project.org/package=xega>.
     Basic asynchronous as well as synchronized communication primitives 
-    are supplied based on file I/O operations (rds) on a shared file system 
-    or by openMPI (MPI) messages.  The gene selection and replacement 
+    are supplied based on file I/O operations ('rds') on a shared file system 
+    or by 'openMPI' (MPI) messages.  The gene selection and replacement 
     strategies, the migration policy as well as the communication topology 
     between islands are configurable.  
     Homogeneous and heterogeneous island algorithms are supported. 
