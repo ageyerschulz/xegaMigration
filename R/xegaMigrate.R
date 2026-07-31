@@ -7,6 +7,83 @@
 
 #' Generate a local function list to test migration.
 #'
+#' @description 
+#' To allow local testing of functions of \code{xegaMigration}, 
+#' the function factory \code{NewLFxegaMigrate} returns a local function list 
+#' with some of the local functions used in configuring \code{xega::xegaRun()}.
+#'
+#' @return An object of class list of length 51. All list elements are local functions
+#'         or lists of local functions
+#'         for configuring \code{xega::xegaRun}.  
+#'         \enumerate{ 
+#'         \item For some elements of the local function list for configuring migration:
+#'       \enumerate{
+#'         \item \code{$path()}. Returns path of directories for results and rds-file communication.                
+#'         \item \code{$pid()}. Returns process id (pid) of island.
+#'         \item \code{$npid()}. Returns number of islands.                  
+#'         \item \code{$Nmigrants()}. Returns number of emigrants.    
+#'         \item \code{$nrecv()}. Number of receiving island processes. For random communication topology.
+#'         \item \code{$GPn()}. Number of island process in inner and outer rings of
+#'                              a communication topology in the form of a generalized 
+#'                              Peterson graph.
+#'         \item \code{$GPk()}  Spoke shift between inner and outer ring nodes in a generalized   
+#'                              Peterson graph.
+#'         \item \code{$torusX()} Number of processes on X-coordinate of a 2-D or 3-D torus of processes.
+#'         \item \code{$torusY()} Number of processes on Y-coordinate of a 2-D or 3-D torus of processes.
+#'         \item \code{$torusZ()} Number of processes on Z-coordinate of a 3-D torus of processes.
+#'         \item \code{$TopK()}. Returns number of genes.   
+#'         \item \code{$SelMigrant()}. Returns selection method for emigrants.    
+#'         \item \code{$SelReplace()}. Returns Replacement method for genes by immigrants.       
+#'         \item \code{$CommunicationTopology()}. Returns function for 
+#'                                 computing all neigboring pids as defined by communication graph. 
+#'         \item \code{$Send()}. Returns send method.  
+#'         \item \code{$Receive()}. Returns receive method.
+#'         \item \code{$ProbeTerm()}. Returns probing function for termination message.    
+#'         \item \code{$BroadcastTerm()}. Returns broadcast function for sending termination message 
+#'                                to all island processes.      
+#'         \item \code{$LTP()}. Local Termination Predicate.                 
+#'         \item \code{$avgTime()}. Average execution time of island. 
+#'         \item \code{$slowestTime()}. Slowest execution time known at island.  
+#'         \item \code{$slowestPid()}.  pid of slowest process in ensemble of island processes.        
+#'         \item \code{$migrationStrategy()}. Returns a boolean function which triggers termination protocol.     
+#'         } 
+#'         \item For the elements of the local function list of \code{xega::xegaRun()},
+#'         \itemize{ 
+#'         \item \code{$penv()},
+#'          \code{$replay()},             
+#'          \code{$verbose()},
+#'          \code{$CutoffFit()},   
+#'          \code{$CBestFitness()},        
+#'          \code{$CWorstFitness()},
+#'          \code{$MutationRate1()},        
+#'          \code{$MutationRate2()},        
+#'          \code{$BitMutationRate1()},    
+#'          \code{$BitMutationRate2()},    
+#'          \code{$MutationRate()},     
+#'          \code{$MutateGene()},        
+#'          \code{$CrossRate()},  
+#'          \code{$UCrossSwap()},           
+#'          \code{$CrossGene()},        
+#'          \code{$Max()},
+#'          \code{$Offset()},  
+#'          \code{$Eps()},                  
+#'          \code{$Elitist()}, 
+#'          \code{$TournamentSize()},        
+#'          \code{$GeneMap()},
+#'          \code{$SelectGene()},  
+#'          \code{$SelectMate()},    
+#'          \code{$Accept()},               
+#'          \code{$ReportEvalErrors()},      
+#'          \code{$Pipeline()},      
+#'          \code{$InitGene()},             
+#'          \code{$DecodeGene()}, 
+#'          \code{$EvalGene()},  
+#'          \code{$SelectionContinuation()},
+#'          \code{$Verbose()}, and     
+#'          \code{$lapply()}. 
+#'         }
+#'         }
+#'
 #' @family Migration
 #' 
 #' @importFrom xegaSelectGene parm
@@ -22,12 +99,18 @@ NewLFxegaMigrate<-function()
   lF$path<-xegaSelectGene::parm(tempdir())
 ######
   lF$Nmigrants<-xegaSelectGene::parm(1)
+  lF$nrecv<-xegaSelectGene::parm(1)
   lF$pid<-xegaSelectGene::parm(5)
   lF$npid<-xegaSelectGene::parm(10)
   lF$TopK<-xegaSelectGene::parm(1) # for selection method "TopK"
   lF$SelMigrant<-xegaSelectGene::SelectGeneFactory(method="TopK")
   lF$SelReplace<-xegaSelectGene::SelectGeneFactory(method="TopK")
   lF$CommunicationTopology<-xegaCommunicationTopologyFactory(method="ring")
+  lF$GPn<-xegaSelectGene::parm(5)
+  lF$GPk<-xegaSelectGene::parm(2)
+  lF$torusX<-xegaSelectGene::parm(3)
+  lF$torusY<-xegaSelectGene::parm(3)
+  lF$torusZ<-xegaSelectGene::parm(3)
   lF$Send<-xegaSendFactory(method="rds")
   lF$Receive<-xegaReceiveFactory(method="rds")
   lF$ProbeTerm<-xegaProbeTermFactory(method="rds")

@@ -21,7 +21,6 @@
 #' lF<-list()
 #' lF$npid<-function() {10}
 #' lF$pid<-function()  {3}
-#' lF$nrecv<-function() {1}
 #' lF$CommunicationTopology<-xegaCommunicationTopologyFactory(method="ring")
 #' path<-tempdir()
 #' lF$path<- function() {path}

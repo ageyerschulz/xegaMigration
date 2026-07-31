@@ -10,7 +10,7 @@ Config<-readRDS(file="TSPlin105HomConfig.rds")
 
 demeResult<-xegaReRun(Config, 
                       popsize=1000,
-                      generations=100,
+                      generations=30,
                       crossrate=0.25,
                       mutrate=0.6,
                       max2opt=100,
